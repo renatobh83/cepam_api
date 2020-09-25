@@ -1,13 +1,22 @@
 const mongoose = require("../../database/database");
 const { Schema } = require("../../database/database");
 
-const PermissaoSchema = new mongoose.Schema(
+const SalaSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       unique: true,
       uppercase: true,
       trim: true,
+    },
+    setor: {
+      type: Schema.Types.ObjectId,
+      ref: "Setor",
+      required: true,
+    },
+    ativo: {
+      type: Boolean,
+      default: true,
     },
     createdAt: {
       type: Date,
@@ -23,6 +32,6 @@ const PermissaoSchema = new mongoose.Schema(
   }
 );
 
-const Permissao = mongoose.model("Permissoes", PermissaoSchema);
+const Sala = mongoose.model("Sala", SalaSchema);
 
-module.exports = Permissao;
+module.exports = Sala;
