@@ -4,6 +4,9 @@ const gruposRouter = require("./gruposRouter");
 const permissoes = require("./permissoesRouter");
 const setores = require("./setoresRouter");
 const salas = require("./salasRouter");
+const planos = require("./planosRouter");
+const procedimentos = require("./procedimentosRouter");
+const tabelas = require("./tabelasRouter");
 
 const routerController = (app) => {
   app.use(indexRouter);
@@ -12,5 +15,8 @@ const routerController = (app) => {
   app.use(permissoes);
   app.use(setores);
   app.use(salas);
+  app.use(planos);
+  app.use(procedimentos);
+  app.use(tabelas);
 };
 module.exports = routerController;

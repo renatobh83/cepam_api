@@ -1,7 +1,9 @@
+const httpStatus = require("http-status");
 const {
   defaultResponse,
   errorResponse,
 } = require("../../../utils/responseControllers");
+const salaTimeSetor = require("../../../utils/salaTimeSetor");
 const Sala = require("../../models/salas");
 
 class SalasController {
@@ -21,57 +23,36 @@ class SalasController {
       res.send(errorResponse(error.message));
     }
   }
-  // async store(req, res) {
-  //   try {
-  //     const userExist = await User.findOne({ email: req.body.email });
-  //     if (userExist) {
-  //       res.send(defaultResponse(userExist));
-  //     } else {
-  //       const newUser = await User.create(req.body);
-  //       res.send(defaultResponse(newUser));
-  //     }
-  //   } catch (error) {
-  //     res.send(errorResponse(error.message));
-  //   }
-  // }
-  // async UpdateUserPatient(req, res) {
-  //   const { name, password, telefone, dtNascimento, email } = req.body;
-  //   try {
-  //     const update = await User.findOne(req.params);
-  //     update.name = name;
-  //     update.email = email;
-  //     update.password = password;
-  //     update.telefone = telefone;
-  //     update.dtNascimento = dtNascimento;
-  //     await update.save();
+  async tempoSala(req, res) {
+    try {
+      const intervalo = await salaTimeSetor.salaTempo(req.params);
+      res.send(defaultResponse(intervalo));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+  async store(req, res) {
+    try {
+      const salaExist = await Sala.findOne({ name: req.body.name });
+      if (salaExist) {
+        res.send(defaultResponse(salaExist));
+      } else {
+        const newSala = await Sala.create(req.body);
+        res.send(defaultResponse(newSala));
+      }
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
 
-  //     res.send(defaultResponse(update, httpStatus.NO_CONTENT));
-  //   } catch (error) {
-  //     res.send(errorResponse(error.message));
-  //   }
-  // }
-  // async deactiveOrActive(req, res) {
-  //   try {
-  //     const response = await User.updateOne(req.query, {
-  //       $set: { ativo: req.body.ativo },
-  //     });
-  //     res.send(defaultResponse(response.nModified, httpStatus.NO_CONTENT));
-  //   } catch (error) {
-  //     res.send(errorResponse(error.message));
-  //   }
-  // }
-
-  // // pacientes
-  // async indexPacientes(req, res) {
-  //   try {
-  //     const pacientes = await User.find({
-  //       $and: [{ ativo: true }, { paciente: true }],
-  //     }).limit(20);
-  //     res.send(defaultResponse(pacientes));
-  //   } catch (error) {
-  //     res.send(errorResponse(error.message));
-  //   }
-  // }
+  async delete(req, res) {
+    try {
+      const response = await Sala.deleteOne(req.params);
+      res.send(defaultResponse(response.nModified, httpStatus.NO_CONTENT));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
 }
 
 module.exports = new SalasController();

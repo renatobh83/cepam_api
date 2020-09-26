@@ -1,23 +1,19 @@
 const mongoose = require("../../database/database");
-const { Schema } = require("../../database/database");
 
-const SalasSchema = new mongoose.Schema(
+const TabelaSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      unique: true,
+      required: true,
       uppercase: true,
+      unique: true,
       trim: true,
     },
-    setor: {
-      type: Schema.Types.ObjectId,
-      ref: "Setor",
-      // required: true,
-    },
-    ativo: {
-      type: Boolean,
-      default: true,
-    },
+    exames: [
+      {
+        type: Object,
+      },
+    ],
     createdAt: {
       type: Date,
       default: Date.now() - 3 * 60 * 60 * 1000,
@@ -36,6 +32,6 @@ const SalasSchema = new mongoose.Schema(
   }
 );
 
-const Salas = mongoose.model("Salas", SalasSchema);
+const Tabela = mongoose.model("Tabela", TabelaSchema);
 
-module.exports = Salas;
+module.exports = Tabela;

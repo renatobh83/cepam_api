@@ -1,22 +1,20 @@
 const mongoose = require("../../database/database");
 const { Schema } = require("../../database/database");
 
-const SalasSchema = new mongoose.Schema(
+const HorariosSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      unique: true,
-      uppercase: true,
-      trim: true,
+    periodo: [
+      {
+        type: Object,
+      },
+    ],
+    sala: {
+      type: Schema.Types.ObjectId,
+      ref: "Sala",
     },
     setor: {
       type: Schema.Types.ObjectId,
       ref: "Setor",
-      // required: true,
-    },
-    ativo: {
-      type: Boolean,
-      default: true,
     },
     createdAt: {
       type: Date,
@@ -36,6 +34,6 @@ const SalasSchema = new mongoose.Schema(
   }
 );
 
-const Salas = mongoose.model("Salas", SalasSchema);
+const Horarios = mongoose.model("Horarios", HorariosSchema);
 
-module.exports = Salas;
+module.exports = Horarios;

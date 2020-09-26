@@ -1,5 +1,5 @@
 const mongoose = require("../../database/database");
-const Sala = require("./Salas");
+const Sala = require("./salas");
 const SetorSchema = new mongoose.Schema(
   {
     name: {
@@ -14,6 +14,10 @@ const SetorSchema = new mongoose.Schema(
       required: true,
     },
     createdAt: {
+      type: Date,
+      default: Date.now() - 3 * 60 * 60 * 1000,
+    },
+    updatedAt: {
       type: Date,
       default: Date.now() - 3 * 60 * 60 * 1000,
     },

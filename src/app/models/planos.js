@@ -1,18 +1,22 @@
 const mongoose = require("../../database/database");
 const { Schema } = require("../../database/database");
 
-const SalasSchema = new mongoose.Schema(
+const planosSchema = new mongoose.Schema(
   {
-    name: {
+    descricao: {
       type: String,
-      unique: true,
+      required: true,
       uppercase: true,
+      unique: true,
       trim: true,
     },
-    setor: {
+    tabela: {
       type: Schema.Types.ObjectId,
-      ref: "Setor",
-      // required: true,
+      ref: "Tabelas",
+    },
+    particular: {
+      type: Boolean,
+      default: false,
     },
     ativo: {
       type: Boolean,
@@ -36,6 +40,6 @@ const SalasSchema = new mongoose.Schema(
   }
 );
 
-const Salas = mongoose.model("Salas", SalasSchema);
+const Planos = mongoose.model("Planos", planosSchema);
 
-module.exports = Salas;
+module.exports = Planos;
