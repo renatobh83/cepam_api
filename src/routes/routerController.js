@@ -7,6 +7,7 @@ const salas = require("./salasRouter");
 const planos = require("./planosRouter");
 const procedimentos = require("./procedimentosRouter");
 const tabelas = require("./tabelasRouter");
+const horarios = require("./horariosRouter");
 
 const routerController = (app) => {
   app.use(indexRouter);
@@ -18,5 +19,6 @@ const routerController = (app) => {
   app.use(planos);
   app.use(procedimentos);
   app.use(tabelas);
+  app.use(horarios);
 };
 module.exports = routerController;

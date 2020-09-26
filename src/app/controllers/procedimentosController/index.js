@@ -24,6 +24,7 @@ class ProcedimentosController {
         res.send(defaultResponse(procedimentoExist));
       } else {
         const newProcedimento = await Procedimentos.create(req.body);
+
         res.send(defaultResponse(newProcedimento));
       }
     } catch (error) {
