@@ -1,9 +1,9 @@
-const mongoose = require("../../database/database");
-const { Schema } = require("../../database/database");
+const mongoose = require('../../database/database');
+const { Schema } = require('../../database/database');
 
 const planosSchema = new mongoose.Schema(
   {
-    descricao: {
+    name: {
       type: String,
       required: true,
       uppercase: true,
@@ -12,7 +12,7 @@ const planosSchema = new mongoose.Schema(
     },
     tabela: {
       type: Schema.Types.ObjectId,
-      ref: "Tabelas",
+      ref: 'Tabelas',
     },
     particular: {
       type: Boolean,
@@ -33,13 +33,13 @@ const planosSchema = new mongoose.Schema(
   },
   {
     writeConcern: {
-      w: "majority",
+      w: 'majority',
       j: true,
       wtimeout: 1000,
     },
   }
 );
 
-const Planos = mongoose.model("Planos", planosSchema);
+const Planos = mongoose.model('Planos', planosSchema);
 
 module.exports = Planos;
