@@ -1,9 +1,9 @@
-const httpStatus = require("http-status");
+const httpStatus = require('http-status');
 const {
   defaultResponse,
   errorResponse,
-} = require("../../../utils/responseControllers");
-const Setores = require("../../models/setores");
+} = require('../../../utils/responseControllers');
+const Setores = require('../../models/setores');
 
 class SetoresController {
   async index(req, res) {

@@ -17,13 +17,22 @@ class PlanosController {
 
   async store(req, res) {
     try {
-      const planoExist = await Planos.findOne({ name: req.body.name });
+      const planoExist = await Planos.findOne(req.body);
       if (planoExist) {
-        res.send(defaultResponse(planoExist));
+        res.send(defaultResponse({}, httpStatus.CONFLICT));
       } else {
         const newPlano = await Planos.create(req.body);
         res.send(defaultResponse(newPlano));
       }
+    } catch (error) {
+      console.log(error);
+      res.send(errorResponse(error.message));
+    }
+  }
+  async updatePlano(req, res) {
+    try {
+      await Planos.updateOne(req.params, { $set: req.body });
+      res.send(defaultResponse({}, httpStatus.NO_CONTENT));
     } catch (error) {
       res.send(errorResponse(error.message));
     }

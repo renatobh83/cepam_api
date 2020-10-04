@@ -37,19 +37,30 @@ class UsersController {
     }
   }
   async UpdateUserPatient(req, res) {
-    const { name, password, telefone, dtNascimento, email, ativo } = req.body;
+    const {
+      name,
+      password,
+      telefone,
+      dtNascimento,
+      email,
+      ativo,
+      nickname,
+    } = req.body;
+
     try {
       const update = await User.findOne(req.params);
       update.name = name;
       update.email = email;
       update.password = password;
+      update.nickname = nickname;
       update.telefone = telefone;
       update.dtNascimento = dtNascimento;
       update.ativo = ativo;
       await update.save();
-
+      console.log(update);
       res.send(defaultResponse(update, httpStatus.NO_CONTENT));
     } catch (error) {
+      console.log(error);
       res.send(errorResponse(error.message));
     }
   }
@@ -89,6 +100,7 @@ class UsersController {
           return res.send(defaultResponse(newUser));
         }
       }
+
       res.send(defaultResponse(user));
     } catch (error) {
       res.send(errorResponse(error.message));

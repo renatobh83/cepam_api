@@ -1,9 +1,9 @@
-const httpStatus = require("http-status");
+const httpStatus = require('http-status');
 const {
   defaultResponse,
   errorResponse,
-} = require("../../../utils/responseControllers");
-const Tabelas = require("../../models/Tabelas");
+} = require('../../../utils/responseControllers');
+const Tabelas = require('../../models/Tabelas');
 
 class TabelasController {
   async index(req, res) {
@@ -17,9 +17,10 @@ class TabelasController {
 
   async store(req, res) {
     try {
-      const tabelaExist = await Tabelas.findOne({ name: req.body.name });
+      const tabelaExist = await Tabelas.findOne(req.body);
+
       if (tabelaExist) {
-        res.send(defaultResponse(tabelaExist));
+        res.send(defaultResponse({}, httpStatus.CONFLICT));
       } else {
         const newTabela = await Tabelas.create(req.body);
         res.send(defaultResponse(newTabela));
@@ -36,11 +37,29 @@ class TabelasController {
       res.send(errorResponse(error.message));
     }
   }
+
+  async updateNomeTabela(req, res) {
+    try {
+      await Tabelas.updateOne(req.params, { $set: req.body });
+      res.send(defaultResponse({}, httpStatus.NO_CONTENT));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+
   async deleteProcedimento(req, res) {
     try {
       await Tabelas.updateOne(req.params, {
         $pull: { exames: req.body },
       });
+      res.send(defaultResponse(httpStatus.NO_CONTENT));
+    } catch (error) {
+      res.send(erroResponse(error.message));
+    }
+  }
+  async deleteTabela(req, res) {
+    try {
+      await Tabelas.deleteOne(req.params);
       res.send(defaultResponse(httpStatus.NO_CONTENT));
     } catch (error) {
       res.send(erroResponse(error.message));

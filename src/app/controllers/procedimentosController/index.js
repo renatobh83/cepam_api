@@ -16,6 +16,7 @@ class ProcedimentosController {
   }
 
   async store(req, res) {
+    console.log(req.body);
     try {
       const procedimentoExist = await Procedimentos.findOne({
         name: req.body.name,
@@ -24,10 +25,10 @@ class ProcedimentosController {
         res.send(defaultResponse(procedimentoExist));
       } else {
         const newProcedimento = await Procedimentos.create(req.body);
-
         res.send(defaultResponse(newProcedimento));
       }
     } catch (error) {
+      console.log(error);
       res.send(errorResponse(error.message));
     }
   }
@@ -43,6 +44,15 @@ class ProcedimentosController {
     try {
       const response = await Procedimentos.deleteOne(req.params);
       res.send(defaultResponse(response.nModified, httpStatus.NO_CONTENT));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+
+  async procedimentoTabelas(req, res) {
+    try {
+      const response = await Procedimentos.find({ ativo: true });
+      res.send(defaultResponse(response));
     } catch (error) {
       res.send(errorResponse(error.message));
     }

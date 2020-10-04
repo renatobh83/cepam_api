@@ -1,9 +1,9 @@
-const httpStatus = require("http-status");
+const httpStatus = require('http-status');
 const {
   defaultResponse,
   errorResponse,
-} = require("../../../utils/responseControllers");
-const Grupos = require("../../models/grupos");
+} = require('../../../utils/responseControllers');
+const Grupos = require('../../models/grupos');
 class GrupoController {
   async indexGrupos(req, res) {
     try {
