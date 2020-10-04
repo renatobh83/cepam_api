@@ -1,6 +1,6 @@
 const mongoose = require('../../database/database');
 const { Schema } = require('../../database/database');
-// const Tabela = require('./Tabelas');
+const Tabela = require('./tabelas');
 
 const procedimentoSchema = new mongoose.Schema(
   {
@@ -38,34 +38,34 @@ const procedimentoSchema = new mongoose.Schema(
   }
 );
 
-// procedimentoSchema.pre('updateOne', function (next) {
-//   const self = this;
-//   const id = self._conditions._id;
-//   Tabela.findOne({ 'exames.exame._id': id }).then((res) => {
-//     if (res) {
-//       return next(
-//         new Error(
-//           'Exame nÃ£o pode ser desativado pois jÃ¡ este associado a uma tabela de procedimento, por favor remova da tabela para ser desativado'
-//         )
-//       );
-//     } else {
-//       next();
-//     }
-//   });
-// });
-// procedimentoSchema.pre('deleteOne', function (next) {
-//   const self = this;
-//   const id = self._conditions._id;
-//   Tabela.findOne({ 'exames.exame._id': id }).then((res) => {
-//     if (res)
-//       return next(
-//         Error(
-//           'Exame nÃ£o pode ser excluÃ­do pois jÃ¡ esta associado a uma tabela de procedimento, por favor remova da tabela para ser excluÃ­do'
-//         )
-//       );
-//     next();
-//   });
-// });
+procedimentoSchema.pre('updateOne', function (next) {
+  const self = this;
+  const id = self._conditions._id;
+  Tabela.findOne({ 'exames.exame._id': id }).then((res) => {
+    if (res) {
+      return next(
+        new Error(
+          'Exame nÃ£o pode ser desativado pois jÃ¡ este associado a uma tabela de procedimento, por favor remova da tabela para ser desativado'
+        )
+      );
+    } else {
+      next();
+    }
+  });
+});
+procedimentoSchema.pre('deleteOne', function (next) {
+  const self = this;
+  const id = self._conditions._id;
+  Tabela.findOne({ 'exames.exame._id': id }).then((res) => {
+    if (res)
+      return next(
+        Error(
+          'Exame nÃ£o pode ser excluÃ­do pois jÃ¡ esta associado a uma tabela de procedimento, por favor remova da tabela para ser excluÃ­do'
+        )
+      );
+    next();
+  });
+});
 
 const Procedimentos = mongoose.model('Procedimentos', procedimentoSchema);
 
