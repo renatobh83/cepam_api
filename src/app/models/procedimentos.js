@@ -1,6 +1,6 @@
 const mongoose = require('../../database/database');
 const { Schema } = require('../../database/database');
-const Tabela = require('./tabelas');
+const Tabela = require('./Tabelas');
 
 const procedimentoSchema = new mongoose.Schema(
   {

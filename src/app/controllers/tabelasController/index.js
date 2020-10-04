@@ -3,7 +3,7 @@ const {
   defaultResponse,
   errorResponse,
 } = require('../../../utils/responseControllers');
-const Tabelas = require('../../models/tabelas');
+const Tabelas = require('../../models/Tabelas');
 
 class TabelasController {
   async index(req, res) {
