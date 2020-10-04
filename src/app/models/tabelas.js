@@ -1,4 +1,4 @@
-const mongoose = require("../../database/database");
+const mongoose = require('../../database/database');
 
 const TabelaSchema = new mongoose.Schema(
   {
@@ -25,13 +25,13 @@ const TabelaSchema = new mongoose.Schema(
   },
   {
     writeConcern: {
-      w: "majority",
+      w: 'majority',
       j: true,
       wtimeout: 1000,
     },
   }
 );
 
-const Tabela = mongoose.model("Tabela", TabelaSchema);
+const Tabela = mongoose.model('Tabela', TabelaSchema);
 
 module.exports = Tabela;
