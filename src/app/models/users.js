@@ -1,6 +1,6 @@
-const mongoose = require("../../database/database");
-const { Schema } = require("../../database/database");
-const bcrypt = require("bcrypt");
+const mongoose = require('../../database/database');
+const { Schema } = require('../../database/database');
+const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema(
   {
@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema(
     },
     nickname: {
       type: String,
+      unique: true,
       required: true,
       lowercase: true,
       trim: true,
@@ -40,7 +41,7 @@ const UserSchema = new mongoose.Schema(
     },
     grupoId: {
       type: Schema.Types.ObjectId,
-      ref: "Grupos",
+      ref: 'Grupos',
     },
     grupo: {
       type: String,
@@ -61,24 +62,24 @@ const UserSchema = new mongoose.Schema(
   { strict: false },
   {
     writeConcern: {
-      w: "majority",
+      w: 'majority',
       j: true,
       wtimeout: 1000,
     },
   }
 );
 
-UserSchema.post("updateOne", function (error, doc, next) {
-  if (error.name === "MongoError" && error.code === 11000)
-    next(new Error("E-mail/Usuario já existe, por favor tente novamente"));
+UserSchema.post('updateOne', function (error, doc, next) {
+  if (error.name === 'MongoError' && error.code === 11000)
+    next(new Error('E-mail/Usuario já existe, por favor tente novamente'));
   else next(error);
 });
 
-UserSchema.pre("save", function (next) {
+UserSchema.pre('save', function (next) {
   const user = this;
   if (user.password) {
     bcrypt.hash(user.password, 10, function (err, hash) {
-      if (err) return next(new Error("Pass not found"));
+      if (err) return next(new Error('Pass not found'));
       user.password = hash;
 
       next();
@@ -88,6 +89,6 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
