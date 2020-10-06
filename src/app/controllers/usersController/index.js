@@ -90,7 +90,10 @@ class UsersController {
   // login
   async loginUser(req, res) {
     try {
-      const user = await User.findOne({ nickname: req.user.nickname });
+      const user = await User.findOne({
+        $or: [{ nickname: req.user.nickname }, { email: req.user.email }],
+      });
+
       if (user === null) {
         const paciente = req.user.sub.split('|');
         if (paciente[0] !== 'auth0') {
