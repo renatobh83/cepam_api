@@ -16,12 +16,13 @@ class GrupoController {
 
   async findGrupo(req, res) {
     try {
-      const grupo = await Grupos.findOne(req.body);
+      const grupo = await Grupos.findOne(req.params);
       res.send(defaultResponse(grupo));
     } catch (error) {
       res.send(errorResponse(error.message));
     }
   }
+
   async store(req, res) {
     try {
       const grupoExist = await Grupos.findOne({ name: req.body.name });
