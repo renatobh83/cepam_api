@@ -1,14 +1,14 @@
-const httpStatus = require('http-status');
+const httpStatus = require("http-status");
 const {
   defaultResponse,
   errorResponse,
-} = require('../../../utils/responseControllers');
-const Permissoes = require('../../models/permissoes');
-const Grupos = require('../../models/grupos');
+} = require("../../../utils/responseControllers");
+const Permissoes = require("../../models/permissoes");
+const Grupos = require("../../models/grupos");
 class PermissaoController {
   async index(req, res) {
     try {
-      const permissoes = await Permissoes.find({});
+      const permissoes = await Permissoes.find({}, { _id: 1, name: 1 });
       res.send(defaultResponse(permissoes));
     } catch (error) {
       res.send(errorResponse(error.message));
@@ -45,7 +45,7 @@ class PermissaoController {
       const grupoAddPermission = await Grupos.findById(grupo);
       grupoAddPermission.permissaoId = permissoes;
       await grupoAddPermission.save();
-      res.send(defaultResponse('Permissao Liberada'));
+      res.send(defaultResponse("Permissao Liberada"));
     } catch (error) {
       res.send(erroResponse(error.message));
     }

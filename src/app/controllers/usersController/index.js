@@ -1,9 +1,9 @@
-const httpStatus = require('http-status');
+const httpStatus = require("http-status");
 const {
   defaultResponse,
   errorResponse,
-} = require('../../../utils/responseControllers');
-const User = require('../../models/users');
+} = require("../../../utils/responseControllers");
+const User = require("../../models/users");
 class UsersController {
   async indexUsers(req, res) {
     try {
@@ -45,6 +45,7 @@ class UsersController {
       email,
       ativo,
       nickname,
+      grupoId,
     } = req.body;
 
     try {
@@ -56,6 +57,7 @@ class UsersController {
       update.telefone = telefone;
       update.dtNascimento = dtNascimento;
       update.ativo = ativo;
+      update.grupoId = grupoId;
       await update.save();
       console.log(update);
       res.send(defaultResponse(update, httpStatus.NO_CONTENT));
@@ -95,8 +97,8 @@ class UsersController {
       });
 
       if (user === null) {
-        const paciente = req.user.sub.split('|');
-        if (paciente[0] !== 'auth0') {
+        const paciente = req.user.sub.split("|");
+        if (paciente[0] !== "auth0") {
           const newUser = new User(req.user);
           newUser.paciente = true;
           newUser.save();

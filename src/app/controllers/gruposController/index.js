@@ -1,9 +1,9 @@
-const httpStatus = require('http-status');
+const httpStatus = require("http-status");
 const {
   defaultResponse,
   errorResponse,
-} = require('../../../utils/responseControllers');
-const Grupos = require('../../models/grupos');
+} = require("../../../utils/responseControllers");
+const Grupos = require("../../models/grupos");
 class GrupoController {
   async indexGrupos(req, res) {
     try {
@@ -16,7 +16,10 @@ class GrupoController {
 
   async findGrupo(req, res) {
     try {
-      const grupo = await Grupos.findOne(req.params);
+      const grupo = await Grupos.findOne(req.params, {
+        permissaoId: 1,
+        _id: 0,
+      });
       res.send(defaultResponse(grupo));
     } catch (error) {
       res.send(errorResponse(error.message));

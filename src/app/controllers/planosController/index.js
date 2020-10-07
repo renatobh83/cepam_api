@@ -1,14 +1,15 @@
-const httpStatus = require('http-status');
+const httpStatus = require("http-status");
 const {
   defaultResponse,
   errorResponse,
-} = require('../../../utils/responseControllers');
-const Planos = require('../../models/planos');
+} = require("../../../utils/responseControllers");
+const Planos = require("../../models/planos");
 
 class PlanosController {
   async index(req, res) {
     try {
       const planos = await Planos.find({});
+
       res.send(defaultResponse(planos));
     } catch (error) {
       res.send(errorResponse(error.message));
@@ -17,6 +18,7 @@ class PlanosController {
 
   async store(req, res) {
     try {
+      console.log(req.body);
       const planoExist = await Planos.findOne(req.body);
       if (planoExist) {
         res.send(defaultResponse({}, httpStatus.CONFLICT));
