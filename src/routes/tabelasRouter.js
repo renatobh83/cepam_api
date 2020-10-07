@@ -2,6 +2,7 @@ const tabelas = require('express').Router();
 const tabelasController = require('../app/controllers/tabelasController');
 
 tabelas.get('/api/tabelas', tabelasController.index);
+tabelas.get('/api/tabelas/cadastro', tabelasController.index);
 tabelas.put('/api/tabelas/:_id', tabelasController.updateTabela);
 tabelas.put('/api/tabelas/name/:_id', tabelasController.updateNomeTabela);
 tabelas.post('/api/tabelas', tabelasController.store);
