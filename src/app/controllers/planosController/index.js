@@ -1,9 +1,9 @@
-const httpStatus = require("http-status");
+const httpStatus = require('http-status');
 const {
   defaultResponse,
   errorResponse,
-} = require("../../../utils/responseControllers");
-const Planos = require("../../models/planos");
+} = require('../../../utils/responseControllers');
+const Planos = require('../../models/planos');
 
 class PlanosController {
   async index(req, res) {
@@ -33,7 +33,8 @@ class PlanosController {
   }
   async updatePlano(req, res) {
     try {
-      await Planos.updateOne(req.params, { $set: req.body });
+      const a = await Planos.updateOne(req.params, { $set: req.body });
+
       res.send(defaultResponse({}, httpStatus.NO_CONTENT));
     } catch (error) {
       res.send(errorResponse(error.message));
