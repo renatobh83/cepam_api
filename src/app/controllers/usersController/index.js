@@ -69,6 +69,21 @@ class UsersController {
     }
   }
 
+  async storePaciente(req, res) {
+    try {
+      const findPaciente = await User.findOne(req.body);
+      if (findPaciente) {
+        res.send(defaultResponse(findPaciente));
+      } else {
+        const paciente = await User.create(req.body);
+
+        res.send(defaultResponse(paciente));
+      }
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+
   // login
   async loginUser(req, res) {
     try {
