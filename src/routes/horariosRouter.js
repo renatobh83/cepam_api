@@ -7,6 +7,6 @@ horarios.get("/api/horarios/:id", horariosController.horarioInativo);
 
 horarios.post("/api/horarios", horariosController.store);
 horarios.put("/api/horarios/", horariosController.updateHorario);
-horarios.delete("/api/horarios/:_id", horariosController.delelePeriodo);
+horarios.post("/api/horarios/delete", horariosController.delelePeriodo);
 
 module.exports = horarios;
