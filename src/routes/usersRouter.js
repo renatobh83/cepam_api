@@ -8,7 +8,7 @@ const verifyToken = require("../middlewares/verifyToken");
 users.get("/api/usuarios/login", verifyToken, usersController.loginUser);
 
 // rotas usuarios
-users.get("/api/usuarios", verifyToken, check, usersController.indexUsers);
+users.get("/api/usuarios", verifyToken, usersController.indexUsers);
 users.get("/api/usuarios/:email", usersController.findUser);
 users.post("/api/usuarios", usersController.store);
 users.put("/api/usuarios/:email", usersController.UpdateUserPatient);

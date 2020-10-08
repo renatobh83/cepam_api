@@ -88,7 +88,19 @@ UserSchema.pre('save', function (next) {
     next();
   }
 });
+UserSchema.pre('updateOne', function (next) {
+  const user = this;
+  if (user._update.$set.password) {
+    bcrypt.hash(user._update.$set.password, 10, function (err, hash) {
+      if (err) return next(new Error('Pass not found'));
+      user._update.$set.password = hash;
 
+      next();
+    });
+  } else {
+    next();
+  }
+});
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
