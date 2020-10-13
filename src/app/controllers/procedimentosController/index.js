@@ -16,7 +16,6 @@ class ProcedimentosController {
   }
 
   async store(req, res) {
-    console.log(req.body);
     try {
       const procedimentoExist = await Procedimentos.findOne({
         name: req.body.name,

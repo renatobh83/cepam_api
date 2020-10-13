@@ -1,11 +1,11 @@
-const mongoose = require("../../database/database");
-const { Schema } = require("../../database/database");
+const mongoose = require('../../database/database');
+const { Schema } = require('../../database/database');
 
 const DadosAgendamentoSchema = new mongoose.Schema(
   {
     paciente: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: 'Users',
     },
     dados: [
       {
@@ -15,6 +15,10 @@ const DadosAgendamentoSchema = new mongoose.Schema(
     agent: {
       type: String,
     },
+    plano: {
+      type: Schema.Types.ObjectId,
+      ref: 'Planos',
+    },
     createdAt: {
       type: Date,
       default: Date.now() - 3 * 60 * 60 * 1000,
@@ -22,7 +26,7 @@ const DadosAgendamentoSchema = new mongoose.Schema(
   },
   {
     writeConcern: {
-      w: "majority",
+      w: 'majority',
       j: true,
       wtimeout: 1000,
     },
@@ -30,7 +34,7 @@ const DadosAgendamentoSchema = new mongoose.Schema(
 );
 
 const DadosAgendamento = mongoose.model(
-  "DadosAgendamento",
+  'DadosAgendamento',
   DadosAgendamentoSchema
 );
 

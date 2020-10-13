@@ -1,10 +1,10 @@
-const httpStatus = require("http-status");
-const toObjectId = require("../../../database/database").Types.ObjectId;
+const httpStatus = require('http-status');
+const toObjectId = require('../../../database/database').Types.ObjectId;
 const {
   defaultResponse,
   errorResponse,
-} = require("../../../utils/responseControllers");
-const Planos = require("../../models/planos");
+} = require('../../../utils/responseControllers');
+const Planos = require('../../models/planos');
 
 class PlanosController {
   async index(req, res) {
@@ -60,7 +60,7 @@ class PlanosController {
   }
   async getExamePlano(req, res) {
     const { id } = req.params;
-    console.log(req.params);
+
     try {
       const response = await Planos.aggregate([
         {
@@ -68,13 +68,13 @@ class PlanosController {
         },
         {
           $lookup: {
-            from: "tabelas",
-            localField: "tabela",
-            foreignField: "_id",
-            as: "ex",
+            from: 'tabelas',
+            localField: 'tabela',
+            foreignField: '_id',
+            as: 'ex',
           },
         },
-        { $unwind: "$ex" },
+        { $unwind: '$ex' },
       ]);
 
       res.send(defaultResponse(response));

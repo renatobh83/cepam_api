@@ -1,33 +1,34 @@
-const httpStatus = require("http-status");
-const toObjectId = require("../../../database/database").Types.ObjectId;
+const httpStatus = require('http-status');
+const toObjectId = require('../../../database/database').Types.ObjectId;
 const {
   defaultResponse,
   errorResponse,
-} = require("../../../utils/responseControllers");
-const Horarios = require("../../models/horarios");
-const gerarHorarios = require("../../../utils/gerarHorarios");
+} = require('../../../utils/responseControllers');
+const Horarios = require('../../models/horarios');
+const gerarHorarios = require('../../../utils/gerarHorarios');
+const getHorariosSetor = require('../../../utils/getHorariosSetor');
 
 class HorariosController {
   async getHorarioLivre(req, res) {
     const { setor } = req.params;
     const { nextHour } = req.query;
 
-    let horario = "0:00";
+    let horario = '0:00';
     if (nextHour) {
       horario = nextHour;
     }
     try {
       const horarios = await Horarios.aggregate([
         { $match: { setor: toObjectId(setor) } },
-        { $unwind: "$periodo" },
+        { $unwind: '$periodo' },
         {
           $addFields: {
             data: {
               $dateFromString: {
                 dateString: {
-                  $concat: ["$periodo.data", "T", "$periodo.horaInicio"],
+                  $concat: ['$periodo.data', 'T', '$periodo.horaInicio'],
                 },
-                format: "%d/%m/%YT%H:%M",
+                format: '%d/%m/%YT%H:%M',
               },
             },
           },
@@ -41,8 +42,8 @@ class HorariosController {
         },
         {
           $match: {
-            "periodo.ocupado": false,
-            "periodo.ativo": true,
+            'periodo.ocupado': false,
+            'periodo.ativo': true,
             data: {
               $gte: new Date(horario),
             },
@@ -50,8 +51,8 @@ class HorariosController {
         },
         {
           $group: {
-            _id: "$_id",
-            periodo: { $push: "$periodo" },
+            _id: '$_id',
+            periodo: { $push: '$periodo' },
           },
         },
       ]);
@@ -66,12 +67,24 @@ class HorariosController {
     try {
       const response = await Horarios.find({
         sala: toObjectId(sala),
-        "periodo.ativo": true,
+        'periodo.ativo': true,
       });
 
       res.send(defaultResponse(response));
     } catch (error) {
       res.send(errorResponse(error));
+    }
+  }
+  async desativarHorario(req, res) {
+    const { id } = req.params;
+    try {
+      await Horarios.findOneAndUpdate(
+        { 'periodo.id': id },
+        { $set: { 'periodo.$.ativo': false } }
+      );
+      res.send(defaultResponse({}, httpStatus.NO_CONTENT));
+    } catch (error) {
+      res.send(errorResponse(error.message));
     }
   }
   async store(req, res) {
@@ -96,7 +109,7 @@ class HorariosController {
     };
     const horas = gerarHorarios(values);
     if (horas.length === 0) {
-      return res.send(errorResponse("Nenhum periodo gerado"));
+      return res.send(errorResponse('Nenhum periodo gerado'));
     }
 
     try {
@@ -117,9 +130,9 @@ class HorariosController {
       horarios.forEach(async (horario) => {
         await Horarios.updateOne(
           {
-            "periodo.id": horario,
+            'periodo.id': horario,
           },
-          { $set: { "periodo.$.ocupado": ocupado } }
+          { $set: { 'periodo.$.ocupado': ocupado } }
         );
       });
 
@@ -154,10 +167,27 @@ class HorariosController {
     const { id } = req.params;
     try {
       const a = await Horarios.findOneAndUpdate(
-        { "periodo.id": id },
-        { $set: { "periodo.$.ativo": false } }
+        { 'periodo.id': id },
+        { $set: { 'periodo.$.ativo': false } }
       );
       res.send(defaultResponse({}, httpStatus.NO_CONTENT));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+
+  async horariosSetor(req, res) {
+    try {
+      const horarios = await getHorariosSetor.Horarios(req.body);
+      res.send(defaultResponse(horarios));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+  async examesComHorario(req, res) {
+    try {
+      const exames = await getHorariosSetor.getExamsWithHorary(req.body);
+      res.send(defaultResponse(exames));
     } catch (error) {
       res.send(errorResponse(error.message));
     }
