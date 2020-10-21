@@ -13,4 +13,12 @@ horarios.get('/api/horarios', horariosController.horariosSetor);
 // horarios agendamento
 horarios.post('/api/horarios/exames', horariosController.examesComHorario);
 horarios.post('/api/horarios/setor', horariosController.horariosSetor);
+
+// dados agendamento
+horarios.post('/api/agendamento/dados', horariosController.storeAgendamento);
+horarios.get(
+  '/api/agendamento/:paciente',
+  horariosController.getAgendamentoPaciente
+);
+
 module.exports = horarios;

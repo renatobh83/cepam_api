@@ -12,7 +12,7 @@ module.exports = {
     const agora = subHours(new Date(), 3);
 
     const horariosDisponivel = () => {
-      const h = Horarios.aggregate([
+      const horarios = Horarios.aggregate([
         { $match: { setor: toObjectId(id) } },
         { $unwind: '$periodo' },
         {
@@ -36,15 +36,18 @@ module.exports = {
             },
           },
         },
-        // { $limit: 10 },
+
         {
           $group: {
             _id: '$_id',
             periodo: { $push: '$periodo' },
           },
         },
+        { $unwind: '$periodo' },
+        { $project: { periodo: 1, _id: 0 } },
       ]);
-      return h;
+
+      return horarios;
     };
     const getHorariosSetor = async () => {
       const retorno = await Horarios.aggregate([
@@ -82,11 +85,13 @@ module.exports = {
       horariosDisponivel(),
       getHorariosSetor(),
     ]);
+
     let result = {};
     result.horarios = horarios;
     result.setorHorario = horarioSetor;
     return result;
   },
+
   async getExamsWithHorary(params) {
     const agora = subHours(new Date(), 3);
     const { plano } = params;

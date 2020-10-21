@@ -30,6 +30,7 @@ class UsersController {
         res.send(defaultResponse(userExist));
       } else {
         const newUser = await User.create(req.body);
+
         res.send(defaultResponse(newUser));
       }
     } catch (error) {
