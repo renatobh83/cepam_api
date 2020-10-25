@@ -8,6 +8,13 @@ const Horarios = require('../../models/horarios');
 const dadosAgendamento = require('../../models/dadosAgendamento');
 const gerarHorarios = require('../../../utils/gerarHorarios');
 const getHorariosSetor = require('../../../utils/getHorariosSetor');
+const {
+  addHours,
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  subHours,
+} = require('date-fns');
 
 class HorariosController {
   async getHorarioLivre(req, res) {
@@ -205,8 +212,6 @@ class HorariosController {
   }
   async getAgendamentoPaciente(req, res) {
     try {
-      const agendamento = await dadosAgendamento.find(req.params);
-      // res.send(defaultResponse(agendamento));
       const { paciente } = req.params;
       const pacienteAgendamnentos = await dadosAgendamento.aggregate([
         { $match: { paciente: toObjectId(paciente) } },
@@ -243,21 +248,44 @@ class HorariosController {
           },
         },
       ]);
+      let agendamentos = [];
+      const today = subHours(new Date(), 3);
+      if (pacienteAgendamnentos.length) {
+        pacienteAgendamnentos[0].dados.forEach((a) => {
+          const horaAgendamento = a.hora.time;
+          const diff = differenceInDays(today, horaAgendamento);
+          const difHora = differenceInHours(today, horaAgendamento);
+          const difMinu = differenceInMinutes(today, horaAgendamento);
 
-      console.log(pacienteAgendamnentos);
-      res.send(defaultResponse(pacienteAgendamnentos));
+          if (diff <= 0) {
+            if (difHora <= -0 && difMinu <= -0) {
+              agendamentos.push(a);
+            }
+          }
+        });
+      }
+
+      res.send(defaultResponse(agendamentos));
     } catch (error) {
       res.send(errorResponse(error.message));
     }
   }
   async cancelAgendamento(req, res) {
+    const { horario } = req.body;
     try {
-      const { id } = req.params;
-      await DadosAgendamento.deleteOne({
-        'dados.hora.id': id,
-      });
-      res.send(defaultResponse({}, httpStatus.NO_CONTENT));
+      await dadosAgendamento.updateOne(
+        { 'dados.horario.id': horario },
+        {
+          $pull: { dados: { 'horario.id': horario } },
+        },
+
+        { multi: true }
+      );
+      const response = await dadosAgendamento.deleteMany({ dados: [] });
+
+      res.send(defaultResponse(response, httpStatus.NO_CONTENT));
     } catch (error) {
+      console.log(error.message);
       res.send(errorResponse(error.message));
     }
   }

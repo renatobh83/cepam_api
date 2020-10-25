@@ -20,5 +20,9 @@ horarios.get(
   '/api/agendamento/:paciente',
   horariosController.getAgendamentoPaciente
 );
+horarios.post(
+  '/api/agendamento/cancela/',
+  horariosController.cancelAgendamento
+);
 
 module.exports = horarios;
