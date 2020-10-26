@@ -18,4 +18,7 @@ users.delete('/api/usuarios/:email', usersController.deactiveOrActive);
 // rotas pacientes
 users.get('/api/pacientes/', usersController.indexPacientes);
 
+// info Dash
+users.get('/api/user/dash/', usersController.infoDash);
+
 module.exports = users;

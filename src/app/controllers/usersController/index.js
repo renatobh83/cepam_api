@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const dashUser = require('../../../utils/dashUser');
 const {
   defaultResponse,
   errorResponse,
@@ -105,6 +106,15 @@ class UsersController {
       }
 
       res.send(defaultResponse(user));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+  // info dash user
+  async infoDash(req, res) {
+    try {
+      const response = await dashUser.infoDash(req.params);
+      res.send(defaultResponse(response));
     } catch (error) {
       res.send(errorResponse(error.message));
     }

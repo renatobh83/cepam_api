@@ -248,6 +248,7 @@ class HorariosController {
           },
         },
       ]);
+
       let agendamentos = [];
       const today = subHours(new Date(), 3);
       if (pacienteAgendamnentos.length) {

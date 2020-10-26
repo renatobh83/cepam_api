@@ -1,13 +1,14 @@
-const indexRouter = require("./indexRouter");
-const usersRouter = require("./usersRouter");
-const gruposRouter = require("./gruposRouter");
-const permissoes = require("./permissoesRouter");
-const setores = require("./setoresRouter");
-const salas = require("./salasRouter");
-const planos = require("./planosRouter");
-const procedimentos = require("./procedimentosRouter");
-const tabelas = require("./tabelasRouter");
-const horarios = require("./horariosRouter");
+const indexRouter = require('./indexRouter');
+const usersRouter = require('./usersRouter');
+const gruposRouter = require('./gruposRouter');
+const permissoes = require('./permissoesRouter');
+const setores = require('./setoresRouter');
+const salas = require('./salasRouter');
+const planos = require('./planosRouter');
+const procedimentos = require('./procedimentosRouter');
+const tabelas = require('./tabelasRouter');
+const horarios = require('./horariosRouter');
+const report = require('./report');
 
 const routerController = (app) => {
   app.use(indexRouter);
@@ -20,5 +21,6 @@ const routerController = (app) => {
   app.use(procedimentos);
   app.use(tabelas);
   app.use(horarios);
+  app.use(report);
 };
 module.exports = routerController;
