@@ -15,7 +15,6 @@ module.exports = {
     if (params !== undefined) {
       dataAtual = new Date(params);
     }
-    console.log(dataAtual);
 
     const inicioMes = firstDayMonth(dataAtual);
     try {
@@ -323,7 +322,7 @@ module.exports = {
       // report.TaxaOcupacao = txOcupacao;
       // report.TaxaHorarioAgendamento = totalsetor;
       // report.AgendamentoMesFuncionario = agendamentoDayFun;
-      console.log(report);
+
       return report;
     } catch (error) {
       return error;
