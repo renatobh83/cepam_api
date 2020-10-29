@@ -6,11 +6,45 @@ const {
 } = require('../../../utils/responseControllers');
 const User = require('../../models/users');
 class UsersController {
-  async indexUsers(req, res) {
+  async indexUsersa(req, res) {
     try {
       const users = await User.find({
         $or: [{ paciente: false }, { paciente: null }],
       });
+      res.send(defaultResponse(users));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
+
+  async indexUsers(req, res) {
+    try {
+      const users = await User.aggregate([
+        { $match: { paciente: null } },
+        {
+          $lookup: {
+            from: 'grupos',
+            localField: 'grupoId',
+            foreignField: '_id',
+            as: 'grupo',
+          },
+        },
+        { $unwind: '$grupo' },
+        {
+          $project: {
+            'grupo.name': 1,
+            name: 1,
+            ativo: 1,
+            dtNascimento: 1,
+            telefone: 1,
+            nickname: 1,
+            email: 1,
+            grupoId: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+      ]);
       res.send(defaultResponse(users));
     } catch (error) {
       res.send(errorResponse(error.message));
