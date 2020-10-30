@@ -24,18 +24,18 @@ module.exports = {
           { $unwind: '$dados' },
           {
             $addFields: {
-              data: {
-                $dateFromString: {
-                  dateString: {
-                    $concat: [
-                      '$dados.horario.data',
-                      'T',
-                      '$dados.horario.horaInicio',
-                    ],
-                  },
-                  format: '%d/%m/%YT%H:%M',
-                },
-              },
+              // data: {
+              //   $dateFromString: {
+              //     dateString: {
+              //       $concat: [
+              //         '$dados.horario.data',
+              //         'T',
+              //         '$dados.horario.horaInicio',
+              //       ],
+              //     },
+              //     format: '%d/%m/%YT%H:%M',
+              //   },
+              // },
               setor: { $toObjectId: '$dados.exame.setor' },
             },
           },
@@ -51,7 +51,7 @@ module.exports = {
             $unwind: '$setor',
           },
           {
-            $match: { data: { $gt: inicioMes, $lt: fimMes } },
+            $match: { createdAt: { $gt: inicioMes, $lt: fimMes } },
           },
 
           { $group: { _id: '$setor', count: { $sum: 1 } } },
@@ -63,24 +63,24 @@ module.exports = {
         const fimMes = endDayMonth(dataAtual);
         const response = DadosAgendamento.aggregate([
           { $unwind: '$dados' },
+          // {
+          //   $addFields: {
+          //     data: {
+          //       $dateFromString: {
+          //         dateString: {
+          //           $concat: [
+          //             '$dados.horario.data',
+          //             'T',
+          //             '$dados.horario.horaInicio',
+          //           ],
+          //         },
+          //         format: '%d/%m/%YT%H:%M',
+          //       },
+          //     },
+          //   },
+          // },
           {
-            $addFields: {
-              data: {
-                $dateFromString: {
-                  dateString: {
-                    $concat: [
-                      '$dados.horario.data',
-                      'T',
-                      '$dados.horario.horaInicio',
-                    ],
-                  },
-                  format: '%d/%m/%YT%H:%M',
-                },
-              },
-            },
-          },
-          {
-            $match: { data: { $gt: inicioMes, $lt: fimMes } },
+            $match: { createdAt: { $gt: inicioMes, $lt: fimMes } },
           },
           { $group: { _id: null, count: { $sum: 1 } } },
           { $project: { _id: 0 } },
