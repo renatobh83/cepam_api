@@ -59,37 +59,46 @@ module.exports = {
         ]);
         return response;
       };
-      // const TotalexamesAgendado = () => {
-      //   const response = DadosAgendamento.aggregate([
-      //     { $unwind: '$dados' },
-      //     {
-      //       $addFields: {
-      //         data: {
-      //           $dateFromString: {
-      //             dateString: {
-      //               $concat: [
-      //                 '$dados.horario.data',
-      //                 'T',
-      //                 '$dados.horario.horaInicio',
-      //               ],
-      //             },
-      //             format: '%d/%m/%YT%H:%M',
-      //           },
-      //         },
-      //         setor: { $toObjectId: '$dados.exame.setor' },
-      //       },
-      //     },
-      //     { $match: { data: { $gte: inicioMes } } },
-      //     {
-      //       $group: {
-      //         _id: null,
-      //         count: { $sum: 1 },
-      //       },
-      //     },
-      //     { $project: { count: 1, _id: 0 } },
-      //   ]);
-      //   return response;
-      // };
+      const TotalexamesAgendado = async () => {
+        const fimMes = endDayMonth(dataAtual);
+        const response = await DadosAgendamento.aggregate([
+          { $unwind: '$dados' },
+          {
+            $addFields: {
+              data: {
+                $dateFromString: {
+                  dateString: {
+                    $concat: [
+                      '$dados.horario.data',
+                      'T',
+                      '$dados.horario.horaInicio',
+                    ],
+                  },
+                  format: '%d/%m/%YT%H:%M',
+                },
+              },
+              setor: { $toObjectId: '$dados.exame.setor' },
+            },
+          },
+          {
+            $lookup: {
+              from: 'setors',
+              localField: 'setor',
+              foreignField: '_id',
+              as: 'setor',
+            },
+          },
+          {
+            $unwind: '$setor',
+          },
+          {
+            $match: { data: { $gte: inicioMes, $lte: fimMes } },
+          },
+
+          { $group: { _id: '$setor.name', count: { $sum: 1 } } },
+        ]);
+        return response;
+      };
       const examesAgendado = () => {
         const fimMes = endDayMonth(dataAtual);
         const response = DadosAgendamento.aggregate([
@@ -199,10 +208,12 @@ module.exports = {
       };
       const totalSetor = async () => {
         const totalHorarios = await totalHorarioMes();
-        const totalAgendamento = await totalAgendadosMes();
+        const totalAgendamento = await TotalexamesAgendado();
+
         let horarioSetor = [];
         totalHorarios.forEach((nome) => {
           totalAgendamento.forEach((horario) => {
+            console.log(horario);
             if (horario._id === nome._id) {
               horarioSetor.push([horario._id, nome.count, horario.count]);
             }
@@ -237,6 +248,7 @@ module.exports = {
 
         return response;
       };
+
       const totalMesFunDay = () => {
         const fimMes = endDayMonth(dataAtual);
         const response = DadosAgendamento.aggregate([
@@ -300,10 +312,80 @@ module.exports = {
         return response;
       };
 
+      const horariosPeriodo = async () => {
+        const response = await horarios.aggregate([
+          { $unwind: '$periodo' },
+          {
+            $addFields: {
+              data: {
+                $dateFromString: {
+                  dateString: {
+                    $concat: ['$periodo.data', 'T', '$periodo.horaInicio'],
+                  },
+                  format: '%d/%m/%YT%H:%M',
+                },
+              },
+            },
+          },
+
+          {
+            $group: {
+              _id: { $month: '$data' },
+
+              totalHorarios: { $sum: 1 },
+            },
+          },
+        ]);
+        return response;
+      };
+
+      const agendamentoPeriodo = async () => {
+        const response = await DadosAgendamento.aggregate([
+          { $unwind: '$dados' },
+          {
+            $addFields: {
+              data: {
+                $dateFromString: {
+                  dateString: {
+                    $concat: [
+                      '$dados.horario.data',
+                      'T',
+                      '$dados.horario.horaInicio',
+                    ],
+                  },
+                  format: '%d/%m/%YT%H:%M',
+                },
+              },
+            },
+          },
+          { $group: { _id: { $month: '$data' }, totalAgendados: { $sum: 1 } } },
+        ]);
+        return response;
+      };
+      const horarioVsAgendaPeriodo = async () => {
+        let total = [];
+        const tHorario = await horariosPeriodo();
+        const tAgendamento = await agendamentoPeriodo();
+        if (tHorario.length > 0) {
+          tHorario.forEach((horario) => {
+            tAgendamento.forEach((agendamento) => {
+              if (horario._id === agendamento._id) {
+                total.push({
+                  mes: horario._id,
+                  horarios: horario.totalHorarios,
+                  agendados: agendamento.totalAgendados,
+                });
+              }
+            });
+          });
+        }
+        return total;
+      };
       const taxaOcupacao = async () => {
         let taxaPorSetor = [];
         const totalHorarios = await totalHorarioMes();
-        const totalAgendamento = await totalAgendadosMes();
+        const totalAgendamento = await TotalexamesAgendado();
+
         if (totalHorarios.length > 0 && totalAgendamento.length > 0) {
           totalHorarios.map((a) => {
             totalAgendamento.some((b) => {
@@ -325,7 +407,7 @@ module.exports = {
         let horarios = 0;
         let agendados = 0;
         const totalHorarios = await totalHorarioMes();
-        const totalAgendamento = await totalAgendadosMes();
+        const totalAgendamento = await TotalexamesAgendado();
 
         totalHorarios.length > 0
           ? totalHorarios.forEach((horario) => (horarios += horario.count))
@@ -357,6 +439,7 @@ module.exports = {
         txOcupacaoGeral,
         totalsetor,
         agendamentoDayFun,
+        hvsAperiodo,
       ] = await Promise.all([
         totalAgendadosMes(),
         totalMesAgendamento(),
@@ -370,19 +453,22 @@ module.exports = {
         taxaOcupacaoGeral(),
         totalSetor(),
         totalMesFunDay(),
+        horarioVsAgendaPeriodo(),
       ]);
       let report = {};
       report.detalhesAgendadoMes = setorMes;
       report.mesAgendamentos = totalMes;
       report.ExamesAgendado = exames;
-      // report.totalExames = totalExames;
       report.agendadoPlano = agendadoPorPlano;
-      // report.HorariosMes = horarioMes;
-      // report.AgendamentoFuncinarios = agendadoMesAgent;
-      // report.AgendamentoDia = agendadoDia;
       report.TaxaOcupacao = txOcupacao;
       report.TaxaOcupacaoGeral = txOcupacaoGeral;
       report.HorarioXAgendamento = totalsetor;
+      report.Periodo = hvsAperiodo;
+
+      // report.totalExames = totalExames;
+      // report.HorariosMes = horarioMes;
+      // report.AgendamentoFuncinarios = agendadoMesAgent;
+      // report.AgendamentoDia = agendadoDia;
       // report.AgendamentoMesFuncionario = agendamentoDayFun;
 
       return report;
