@@ -290,6 +290,55 @@ class HorariosController {
       res.send(errorResponse(error.message));
     }
   }
+  async getAgendamentos(req, res) {
+    try {
+      const response = await dadosAgendamento.aggregate([
+        { $unwind: '$dados' },
+        {
+          $lookup: {
+            from: 'horarios',
+            localField: 'dados.horario.id',
+            foreignField: 'periodo.id',
+            as: 'sala',
+          },
+        },
+        {
+          $lookup: {
+            from: 'salas',
+            localField: 'sala.sala',
+            foreignField: '_id',
+            as: 'sala',
+          },
+        },
+        { $unwind: '$sala' },
+
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'paciente',
+            foreignField: '_id',
+            as: 'paciente',
+          },
+        },
+        { $unwind: '$paciente' },
+        {
+          $project: {
+            'paciente.name': 1,
+            'sala.name': 1,
+            'sala._id': 1,
+            'dados.exame.name': 1,
+            'dados.horario.horaInicio': 1,
+            'dados.horario.data': 1,
+          },
+        },
+      ]);
+
+      res.send(defaultResponse(response));
+    } catch (error) {
+      console.log(error);
+      res.send(errorResponse(error.message));
+    }
+  }
 }
 
 module.exports = new HorariosController();

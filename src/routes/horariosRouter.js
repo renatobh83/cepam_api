@@ -16,6 +16,7 @@ horarios.post('/api/horarios/setor', horariosController.horariosSetor);
 
 // dados agendamento
 horarios.post('/api/agendamento/dados', horariosController.storeAgendamento);
+horarios.get('/api/agendamento/agenda', horariosController.getAgendamentos);
 horarios.get(
   '/api/agendamento/:paciente',
   horariosController.getAgendamentoPaciente

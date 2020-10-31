@@ -24,6 +24,18 @@ module.exports = {
           { $unwind: '$dados' },
           {
             $addFields: {
+              data: {
+                $dateFromString: {
+                  dateString: {
+                    $concat: [
+                      '$dados.horario.data',
+                      'T',
+                      '$dados.horario.horaInicio',
+                    ],
+                  },
+                  format: '%d/%m/%YT%H:%M',
+                },
+              },
               setor: { $toObjectId: '$dados.exame.setor' },
             },
           },
@@ -39,7 +51,7 @@ module.exports = {
             $unwind: '$setor',
           },
           {
-            $match: { createdAt: { $gte: inicioMes, $lte: fimMes } },
+            $match: { data: { $gte: inicioMes, $lte: fimMes } },
           },
 
           { $group: { _id: '$setor.name', count: { $sum: 1 } } },
@@ -52,7 +64,23 @@ module.exports = {
         const response = DadosAgendamento.aggregate([
           { $unwind: '$dados' },
           {
-            $match: { createdAt: { $gt: inicioMes, $lt: fimMes } },
+            $addFields: {
+              data: {
+                $dateFromString: {
+                  dateString: {
+                    $concat: [
+                      '$dados.horario.data',
+                      'T',
+                      '$dados.horario.horaInicio',
+                    ],
+                  },
+                  format: '%d/%m/%YT%H:%M',
+                },
+              },
+            },
+          },
+          {
+            $match: { data: { $gt: inicioMes, $lt: fimMes } },
           },
           { $group: { _id: null, count: { $sum: 1 } } },
           { $project: { _id: 0 } },
@@ -213,7 +241,6 @@ module.exports = {
         let horarioSetor = [];
         totalHorarios.forEach((nome) => {
           totalAgendamento.forEach((horario) => {
-            console.log(horario);
             if (horario._id === nome._id) {
               horarioSetor.push([horario._id, nome.count, horario.count]);
             }
