@@ -2,6 +2,7 @@ const horarios = require('express').Router();
 const horariosController = require('../app/controllers/horariosController');
 const verifyToken = require('../middlewares/verifyToken');
 const { check } = require('../middlewares/permissao');
+const { isUser } = require('../middlewares/chekUser');
 
 horarios.get(
   '/api/horarios/setor/:setor',
@@ -10,7 +11,7 @@ horarios.get(
   horariosController.getHorarioLivre
 );
 horarios.get(
-  '/api/horario/sala/:sala',
+  '/api/horarios/sala/:sala',
   verifyToken,
   check,
   horariosController.getHorarioBySala
@@ -34,7 +35,12 @@ horarios.post(
   verifyToken,
   horariosController.delelePeriodo
 );
-horarios.get('/api/horarios', verifyToken, horariosController.horariosSetor);
+horarios.get(
+  '/api/horarios',
+  verifyToken,
+  check,
+  horariosController.horariosSetor
+);
 // horarios agendamento
 horarios.post(
   '/api/horarios/exames',
@@ -63,6 +69,7 @@ horarios.post(
 horarios.get(
   '/api/agendamento/agenda',
   verifyToken,
+  isUser,
   horariosController.getAgendamentos
 );
 horarios.get(
