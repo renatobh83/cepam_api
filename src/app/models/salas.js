@@ -1,5 +1,5 @@
-const mongoose = require("../../database/database");
-const { Schema } = require("../../database/database");
+const mongoose = require('../../database/database');
+const { Schema } = require('../../database/database');
 
 const SalasSchema = new mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const SalasSchema = new mongoose.Schema(
     },
     setor: {
       type: Schema.Types.ObjectId,
-      ref: "Setor",
+      ref: 'Setor',
       // required: true,
     },
     ativo: {
@@ -29,13 +29,13 @@ const SalasSchema = new mongoose.Schema(
   },
   {
     writeConcern: {
-      w: "majority",
+      w: 'majority',
       j: true,
       wtimeout: 1000,
     },
   }
 );
 
-const Salas = mongoose.model("Salas", SalasSchema);
+const Salas = mongoose.model('Salas', SalasSchema);
 
 module.exports = Salas;

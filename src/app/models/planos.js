@@ -39,7 +39,10 @@ const planosSchema = new mongoose.Schema(
     },
   }
 );
-
+planosSchema.pre('updateOne', function (next) {
+  this.set({ updatedAt: Date.now() - 3 * 60 * 60 * 1000 });
+  next();
+});
 const Planos = mongoose.model('Planos', planosSchema);
 
 module.exports = Planos;

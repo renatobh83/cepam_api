@@ -1,5 +1,5 @@
-const mongoose = require("../../database/database");
-const Sala = require("./salas");
+const mongoose = require('../../database/database');
+const Sala = require('./salas');
 const SetorSchema = new mongoose.Schema(
   {
     name: {
@@ -24,14 +24,14 @@ const SetorSchema = new mongoose.Schema(
   },
   {
     writeConcern: {
-      w: "majority",
+      w: 'majority',
       j: true,
       wtimeout: 1000,
     },
   }
 );
 
-SetorSchema.pre("deleteOne", function (next) {
+SetorSchema.pre('deleteOne', function (next) {
   const self = this;
   const id = self._conditions._id;
 
@@ -39,13 +39,16 @@ SetorSchema.pre("deleteOne", function (next) {
     if (response)
       return next(
         Error(
-          "Setor não pode ser excluído pois já este associado a uma sala de atendimento, por favor remova a associação para ser excluído"
+          'Setor não pode ser excluído pois já este associado a uma sala de atendimento, por favor remova a associação para ser excluído'
         )
       );
     next();
   });
 });
-
-const Setor = mongoose.model("Setor", SetorSchema);
+SetorSchema.pre('updateOne', function (next) {
+  this.set({ updatedAt: Date.now() - 3 * 60 * 60 * 1000 });
+  next();
+});
+const Setor = mongoose.model('Setor', SetorSchema);
 
 module.exports = Setor;

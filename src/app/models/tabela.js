@@ -32,6 +32,10 @@ const TabelaSchema = new mongoose.Schema(
   }
 );
 
+TabelaSchema.pre('updateOne', function (next) {
+  this.set({ updatedAt: Date.now() - 3 * 60 * 60 * 1000 });
+  next();
+});
 const Tabela = mongoose.model('Tabela', TabelaSchema);
 
 module.exports = Tabela;

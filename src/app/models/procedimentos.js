@@ -41,11 +41,12 @@ const procedimentoSchema = new mongoose.Schema(
 procedimentoSchema.pre('updateOne', function (next) {
   const self = this;
   const id = self._conditions._id;
+  this.set({ updatedAt: Date.now() - 3 * 60 * 60 * 1000 });
   Tabela.findOne({ 'exames.exame._id': id }).then((res) => {
     if (res) {
       return next(
         new Error(
-          'Exame nÃ£o pode ser desativado pois jÃ¡ este associado a uma tabela de procedimento, por favor remova da tabela para ser desativado'
+          'Exame nÃo pode ser desativado pois já esta associado a uma tabela de procedimento, por favor remova da tabela para ser desativado'
         )
       );
     } else {
@@ -60,7 +61,7 @@ procedimentoSchema.pre('deleteOne', function (next) {
     if (res)
       return next(
         Error(
-          'Exame nÃ£o pode ser excluÃ­do pois jÃ¡ esta associado a uma tabela de procedimento, por favor remova da tabela para ser excluÃ­do'
+          'Exame não pode ser excluí­do pois já esta associado a uma tabela de procedimento, por favor remova da tabela para ser excluído'
         )
       );
     next();

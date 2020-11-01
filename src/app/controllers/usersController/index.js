@@ -75,7 +75,6 @@ class UsersController {
   async UpdateUserPatient(req, res) {
     try {
       const update = await User.updateOne(req.params, { $set: req.body });
-
       res.send(defaultResponse(update, httpStatus.NO_CONTENT));
     } catch (error) {
       console.log(error);

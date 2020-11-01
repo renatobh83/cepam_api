@@ -50,7 +50,7 @@ class SetoresController {
       const setores = await Setores.find({});
       res.send(defaultResponse(setores));
     } catch (error) {
-      res.send(erroResponse(error.message));
+      res.send(errorResponse(error.message));
     }
   }
 }

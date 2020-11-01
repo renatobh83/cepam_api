@@ -1,28 +1,78 @@
 const horarios = require('express').Router();
 const horariosController = require('../app/controllers/horariosController');
+const verifyToken = require('../middlewares/verifyToken');
+const { check } = require('../middlewares/permissao');
 
-horarios.get('/api/horarios/setor/:setor', horariosController.getHorarioLivre);
-horarios.get('/api/horario/sala/:sala', horariosController.getHorarioBySala);
-horarios.get('/api/horarios/:id', horariosController.horarioInativo);
+horarios.get(
+  '/api/horarios/setor/:setor',
+  verifyToken,
+  check,
+  horariosController.getHorarioLivre
+);
+horarios.get(
+  '/api/horario/sala/:sala',
+  verifyToken,
+  check,
+  horariosController.getHorarioBySala
+);
+horarios.get(
+  '/api/horarios/:id',
+  verifyToken,
+  check,
+  horariosController.horarioInativo
+);
 
-horarios.post('/api/horarios', horariosController.store);
-horarios.put('/api/horarios/', horariosController.updateHorario);
-horarios.put('/api/horarios/:id', horariosController.desativarHorario);
-horarios.post('/api/horarios/delete', horariosController.delelePeriodo);
-horarios.get('/api/horarios', horariosController.horariosSetor);
+horarios.post('/api/horarios', verifyToken, check, horariosController.store);
+horarios.put('/api/horarios/', verifyToken, horariosController.updateHorario);
+horarios.put(
+  '/api/horarios/:id',
+  verifyToken,
+  horariosController.desativarHorario
+);
+horarios.post(
+  '/api/horarios/delete',
+  verifyToken,
+  horariosController.delelePeriodo
+);
+horarios.get('/api/horarios', verifyToken, horariosController.horariosSetor);
 // horarios agendamento
-horarios.post('/api/horarios/exames', horariosController.examesComHorario);
-horarios.post('/api/horarios/setor', horariosController.horariosSetor);
+horarios.post(
+  '/api/horarios/exames',
+  verifyToken,
+  horariosController.examesComHorario
+);
+horarios.post(
+  '/api/horarios/setor',
+  verifyToken,
+  horariosController.horariosSetor
+);
+
+horarios.get(
+  '/api/gerarHorarios',
+  verifyToken,
+  check,
+  horariosController.verAcesso
+);
 
 // dados agendamento
-horarios.post('/api/agendamento/dados', horariosController.storeAgendamento);
-horarios.get('/api/agendamento/agenda', horariosController.getAgendamentos);
+horarios.post(
+  '/api/agendamento/dados',
+  verifyToken,
+  horariosController.storeAgendamento
+);
+horarios.get(
+  '/api/agendamento/agenda',
+  verifyToken,
+  horariosController.getAgendamentos
+);
 horarios.get(
   '/api/agendamento/:paciente',
+  verifyToken,
   horariosController.getAgendamentoPaciente
 );
 horarios.post(
   '/api/agendamento/cancela/',
+  verifyToken,
   horariosController.cancelAgendamento
 );
 

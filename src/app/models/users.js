@@ -77,6 +77,7 @@ UserSchema.post('updateOne', function (error, doc, next) {
 
 UserSchema.pre('save', function (next) {
   const user = this;
+
   if (user.password) {
     bcrypt.hash(user.password, 10, function (err, hash) {
       if (err) return next(new Error('Pass not found'));
@@ -90,6 +91,7 @@ UserSchema.pre('save', function (next) {
 });
 UserSchema.pre('updateOne', function (next) {
   const user = this;
+  this.set({ updatedAt: Date.now() - 3 * 60 * 60 * 1000 });
   if (user._update.$set.password) {
     bcrypt.hash(user._update.$set.password, 10, function (err, hash) {
       if (err) return next(new Error('Pass not found'));

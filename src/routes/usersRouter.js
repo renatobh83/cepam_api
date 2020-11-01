@@ -9,16 +9,20 @@ users.get('/api/usuarios/login', verifyToken, usersController.loginUser);
 
 // rotas usuarios
 users.get('/api/usuarios', verifyToken, usersController.indexUsers);
-users.get('/api/usuarios/:email', usersController.findUser);
-users.post('/api/usuarios', usersController.store);
-users.post('/api/paciente', usersController.storePaciente);
-users.put('/api/usuarios/:email', usersController.UpdateUserPatient);
-users.delete('/api/usuarios/:email', usersController.deactiveOrActive);
+users.get('/api/usuarios/:email', verifyToken, usersController.findUser);
+users.post('/api/usuarios', verifyToken, usersController.store);
+users.post('/api/paciente', verifyToken, usersController.storePaciente);
+users.put('/api/usuarios/:_id', verifyToken, usersController.UpdateUserPatient);
+users.delete(
+  '/api/usuarios/:email',
+  verifyToken,
+  usersController.deactiveOrActive
+);
 
 // rotas pacientes
-users.get('/api/pacientes/', usersController.indexPacientes);
+users.get('/api/pacientes/', verifyToken, usersController.indexPacientes);
 
 // info Dash
-users.get('/api/user/dash/', usersController.infoDash);
+users.get('/api/user/dash/', verifyToken, usersController.infoDash);
 
 module.exports = users;

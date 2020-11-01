@@ -17,6 +17,9 @@ const {
 } = require('date-fns');
 
 class HorariosController {
+  async verAcesso(req, res) {
+    res.send(defaultResponse('Acesso gerantido'));
+  }
   async getHorarioLivre(req, res) {
     const { setor } = req.params;
     const { nextHour } = req.query;
@@ -295,6 +298,22 @@ class HorariosController {
       const response = await dadosAgendamento.aggregate([
         { $unwind: '$dados' },
         {
+          $addFields: {
+            data: {
+              $dateFromString: {
+                dateString: {
+                  $concat: [
+                    '$dados.horario.data',
+                    'T',
+                    '$dados.horario.horaInicio',
+                  ],
+                },
+                format: '%d/%m/%YT%H:%M',
+              },
+            },
+          },
+        },
+        {
           $lookup: {
             from: 'horarios',
             localField: 'dados.horario.id',
@@ -321,6 +340,7 @@ class HorariosController {
           },
         },
         { $unwind: '$paciente' },
+        { $sort: { data: 1 } },
         {
           $project: {
             'paciente.name': 1,
