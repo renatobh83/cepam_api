@@ -27,7 +27,6 @@ class ProcedimentosController {
         res.send(defaultResponse(newProcedimento));
       }
     } catch (error) {
-      console.log(error);
       res.send(errorResponse(error.message));
     }
   }

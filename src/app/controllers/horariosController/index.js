@@ -289,7 +289,6 @@ class HorariosController {
 
       res.send(defaultResponse(response, httpStatus.NO_CONTENT));
     } catch (error) {
-      console.log(error.message);
       res.send(errorResponse(error.message));
     }
   }
@@ -355,7 +354,6 @@ class HorariosController {
 
       res.send(defaultResponse(response));
     } catch (error) {
-      console.log(error);
       res.send(errorResponse(error.message));
     }
   }

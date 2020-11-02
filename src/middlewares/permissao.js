@@ -14,7 +14,6 @@ module.exports = {
           { _id: response.grupoId },
           { permissaoId: 1, _id: 0 }
         );
-        console.log(req.path.split('/'), grupo, idPermissao);
 
         if (
           grupo.permissaoId.includes(idPermissao !== null ? idPermissao._id : 0)

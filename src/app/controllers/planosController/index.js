@@ -36,7 +36,6 @@ class PlanosController {
         res.send(defaultResponse(newPlano));
       }
     } catch (error) {
-      console.log(error);
       res.send(errorResponse(error.message));
     }
   }

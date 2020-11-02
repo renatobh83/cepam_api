@@ -73,11 +73,17 @@ class UsersController {
     }
   }
   async UpdateUserPatient(req, res) {
+    const { _id: p } = req.params;
+
+    let paramsUpdate = { _id: p };
+    if (p.includes('@')) {
+      paramsUpdate = { email: p };
+    }
     try {
-      const update = await User.updateOne(req.params, { $set: req.body });
+      const update = await User.updateOne(paramsUpdate, { $set: req.body });
+
       res.send(defaultResponse(update, httpStatus.NO_CONTENT));
     } catch (error) {
-      console.log(error);
       res.send(errorResponse(error.message));
     }
   }
