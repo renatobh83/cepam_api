@@ -203,6 +203,7 @@ module.exports = {
 
       const totalHorarioMes = async () => {
         const fimMes = endDayMonth(dataAtual);
+
         const response = await horarios.aggregate([
           { $unwind: '$periodo' },
 
@@ -232,6 +233,7 @@ module.exports = {
           { $match: { data: { $gte: inicioMes, $lte: fimMes } } },
           { $group: { _id: '$setor.name', count: { $sum: 1 } } },
         ]);
+
         return response;
       };
       const totalSetor = async () => {
@@ -406,6 +408,7 @@ module.exports = {
             });
           });
         }
+        console.log(total);
         return total;
       };
       const taxaOcupacao = async () => {
@@ -430,6 +433,7 @@ module.exports = {
           return taxaPorSetor;
         }
       };
+
       const taxaOcupacaoGeral = async () => {
         let horarios = 0;
         let agendados = 0;
