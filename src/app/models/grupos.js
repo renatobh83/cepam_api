@@ -8,6 +8,7 @@ const GruposSchema = new mongoose.Schema(
       unique: true,
       uppercase: true,
       trim: true,
+      required: true
     },
     permissaoId: [
       {
