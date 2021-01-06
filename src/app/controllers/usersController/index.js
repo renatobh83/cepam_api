@@ -139,6 +139,7 @@ class UsersController {
         if (paciente[0] !== 'auth0') {
           const newUser = new User(req.user);
           newUser.paciente = true;
+          newUser.ativo = true;
           newUser.save();
           return res.send(defaultResponse(newUser));
         }
