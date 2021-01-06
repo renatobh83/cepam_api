@@ -8,6 +8,7 @@ const Sala = require("../../models/salas");
 
 class SalasController {
   async index(req, res) {
+
     try {
       const salas = await Sala.find({});
       res.send(defaultResponse(salas));

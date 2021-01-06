@@ -239,13 +239,14 @@ module.exports = {
       const totalSetor = async () => {
         const totalHorarios = await totalHorarioMes();
         const totalAgendamento = await TotalexamesAgendado();
-
         let horarioSetor = [];
         totalHorarios.forEach((nome) => {
+          horarioSetor.push([nome._id, nome.count, 0]);
           totalAgendamento.forEach((horario) => {
             if (horario._id === nome._id) {
+              horarioSetor = []
               horarioSetor.push([horario._id, nome.count, horario.count]);
-            }
+            } 
           });
         });
         return horarioSetor;
@@ -397,6 +398,7 @@ module.exports = {
         const tAgendamento = await agendamentoPeriodo();
         if (tHorario.length > 0) {
           tHorario.forEach((horario) => {
+           
             tAgendamento.forEach((agendamento) => {
               if (horario._id === agendamento._id) {
                 total.push({
@@ -404,11 +406,17 @@ module.exports = {
                   horarios: horario.totalHorarios,
                   agendados: agendamento.totalAgendados,
                 });
+              } else {
+                total.push({
+                  mes: horario._id,
+                  horarios: horario.totalHorarios,
+                  agendados: 0,
+                });
               }
             });
           });
         }
-        console.log(total);
+      
         return total;
       };
       const taxaOcupacao = async () => {
