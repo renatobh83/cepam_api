@@ -105,7 +105,7 @@ class UsersController {
         $and: [{ ativo: true }, { paciente: true }],
       })
         .sort({ name: 1 })
-        .limit(1);
+        // .limit(1);
       res.send(defaultResponse(pacientes));
     } catch (error) {
       res.send(errorResponse(error.message));
