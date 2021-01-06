@@ -14,14 +14,14 @@ class SetoresController {
       res.send(errorResponse(error.message));
     }
   }
-  async findSetor(req, res) {
-    try {
-      const setor = await Setores.findOne(req.body);
-      res.send(defaultResponse(setor));
-    } catch (error) {
-      res.send(errorResponse(error.message));
-    }
-  }
+  // async findSetor(req, res) {
+  //   try {
+  //     const setor = await Setores.findOne(req.body);
+  //     res.send(defaultResponse(setor));
+  //   } catch (error) {
+  //     res.send(errorResponse(error.message));
+  //   }
+  // }
   async store(req, res) {
     try {
       const setorExist = await Setores.findOne({ name: req.body.name });

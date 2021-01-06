@@ -6,16 +6,16 @@ const {
 } = require('../../../utils/responseControllers');
 const User = require('../../models/users');
 class UsersController {
-  async indexUsersa(req, res) {
-    try {
-      const users = await User.find({
-        $or: [{ paciente: false }, { paciente: null }],
-      });
-      res.send(defaultResponse(users));
-    } catch (error) {
-      res.send(errorResponse(error.message));
-    }
-  }
+  // async indexUsersa(req, res) {
+  //   try {
+  //     const users = await User.find({
+  //       $or: [{ paciente: false }, { paciente: null }],
+  //     });
+  //     res.send(defaultResponse(users));
+  //   } catch (error) {
+  //     res.send(errorResponse(error.message));
+  //   }
+  // }
 
   async indexUsers(req, res) {
     try {
@@ -50,14 +50,14 @@ class UsersController {
       res.send(errorResponse(error.message));
     }
   }
-  async findUser(req, res) {
-    try {
-      const user = await User.findOne(req.body);
-      res.send(defaultResponse(user));
-    } catch (error) {
-      res.send(errorResponse(error.message));
-    }
-  }
+  // async findUser(req, res) {
+  //   try {
+  //     const user = await User.findOne(req.body);
+  //     res.send(defaultResponse(user));
+  //   } catch (error) {
+  //     res.send(errorResponse(error.message));
+  //   }
+  // }
   async store(req, res) {
     try {
       const userExist = await User.findOne({ email: req.body.email });
