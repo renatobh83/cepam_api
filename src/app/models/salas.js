@@ -12,7 +12,7 @@ const SalasSchema = new mongoose.Schema(
     setor: {
       type: Schema.Types.ObjectId,
       ref: 'Setor',
-      // required: true,
+       required: true,
     },
     ativo: {
       type: Boolean,
