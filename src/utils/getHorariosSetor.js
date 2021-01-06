@@ -36,13 +36,14 @@ module.exports = {
             },
           },
         },
-
+        { $limit:50 },
         {
           $group: {
             _id: '$_id',
             periodo: { $push: '$periodo' },
           },
         },
+     
         { $unwind: '$periodo' },
         { $project: { periodo: 1, _id: 0 } },
       ]);

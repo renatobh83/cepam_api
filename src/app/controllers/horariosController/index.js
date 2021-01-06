@@ -60,6 +60,7 @@ class HorariosController {
             },
           },
         },
+        { $limit:10 },
         {
           $group: {
             _id: '$_id',
@@ -74,15 +75,32 @@ class HorariosController {
     }
   }
   async getHorarioBySala(req, res) {
-    const { sala } = req.params;
-    try {
-      const response = await Horarios.find({
-        sala: toObjectId(sala),
-        'periodo.ativo': true,
-      });
+    const { sala, pg } = req.params;
+    const pageNumber = parseInt(pg)
 
+    try {
+      // const response = await Horarios.find({
+      //   sala: toObjectId(sala),
+      //   'periodo.ativo': true,
+        
+      // })
+      const response = await Horarios.aggregate([
+        { $match: {sala: toObjectId(sala) }},
+         { $unwind: '$periodo' }, 
+         { $match: { 'periodo.ativo': true }},
+         {$project:{ _id:0, 'periodo': 1}},
+         {$skip: pageNumber == 10 ? 0 : pageNumber - 10},
+        { $limit:10 },
+        {
+          $group: {
+            _id: '$_id',
+            periodo: { $push: '$periodo' },
+          },
+        },
+      ])
       res.send(defaultResponse(response));
     } catch (error) {
+      console.log(error)
       res.send(errorResponse(error));
     }
   }

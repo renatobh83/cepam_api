@@ -11,7 +11,7 @@ horarios.get(
   horariosController.getHorarioLivre
 );
 horarios.get(
-  '/api/horarios/sala/:sala',
+  '/api/horarios/sala/:sala/:pg',
   verifyToken,
   check,
   horariosController.getHorarioBySala
