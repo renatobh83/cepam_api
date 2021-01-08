@@ -12,7 +12,8 @@ users.get('/api/usuarios', verifyToken,check, usersController.indexUsers);
 // users.get('/api/usuarios/:email', verifyToken, usersController.findUser);
 users.post('/api/usuarios', verifyToken,check, usersController.store);
 users.post('/api/paciente', verifyToken,check, usersController.storePaciente);
-users.put('/api/usuarios/:_id', verifyToken,check, usersController.UpdateUserPatient);
+users.put('/api/usuarios/:_id', verifyToken, usersController.UpdateUserPatient);
+
 users.delete(
   '/api/usuarios/:email',
   verifyToken,
