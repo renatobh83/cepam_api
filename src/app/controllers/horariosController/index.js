@@ -221,7 +221,45 @@ class HorariosController {
       res.send(errorResponse(error.message));
     }
   }
-
+  async getHorarios(req,res){
+    const { sala } = req.params;
+ 
+    try {
+      const response = await Horarios.aggregate([
+            { $match: {sala: toObjectId(sala) }},
+              { $unwind: '$periodo' },
+        {
+          $addFields: {
+            data: {
+              $dateFromString: {
+                dateString: {
+                  $concat: ['$periodo.data', 'T', '$periodo.horaInicio'],
+                },
+                format: '%d/%m/%YT%H:%M',
+              },
+            },
+          },
+        },
+       {   $match: {
+            'periodo.ocupado': false,
+            'periodo.ativo': true,
+            data: {
+              $gte: new Date(),
+            },
+          },},
+                 {
+          $group: {
+            _id: '$_id',
+            periodo: { $push: '$periodo' },
+          },
+        },
+      ])
+  
+        res.send(defaultResponse(response));
+    } catch (error) {
+      res.send(errorResponse(error.message));
+    }
+  }
   // Dados agendamento Model
   async storeAgendamento(req, res) {
     try {

@@ -22,6 +22,8 @@ horarios.get(
   check,
   horariosController.horarioInativo
 );
+horarios.get("/api/horarios/sala/:sala", verifyToken,
+  check,horariosController.getHorarios)
 
 horarios.post('/api/horarios', verifyToken, check, horariosController.store);
 horarios.put('/api/horarios/', verifyToken, horariosController.updateHorario);
