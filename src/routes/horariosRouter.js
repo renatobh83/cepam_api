@@ -10,12 +10,7 @@ horarios.get(
   check,
   horariosController.getHorarioLivre
 );
-horarios.get(
-  '/api/horarios/sala/:sala/:pg',
-  verifyToken,
-  check,
-  horariosController.getHorarioBySala
-);
+
 horarios.get(
   '/api/horarios/:id',
   verifyToken,
