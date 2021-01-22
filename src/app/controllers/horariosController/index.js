@@ -74,36 +74,36 @@ class HorariosController {
       res.send(errorResponse(error.message));
     }
   }
-  async getHorarioBySala(req, res) {
-    const { sala, pg } = req.params;
-    const pageNumber = parseInt(pg)
+  // async getHorarioBySala(req, res) {
+  //   const { sala, pg } = req.params;
+  //   const pageNumber = parseInt(pg)
 
-    try {
-      // const response = await Horarios.find({
-      //   sala: toObjectId(sala),
-      //   'periodo.ativo': true,
+  //   try {
+  //     // const response = await Horarios.find({
+  //     //   sala: toObjectId(sala),
+  //     //   'periodo.ativo': true,
         
-      // })
-      const response = await Horarios.aggregate([
-        { $match: {sala: toObjectId(sala) }},
-         { $unwind: '$periodo' }, 
-         { $match: { 'periodo.ativo': true }},
-         {$project:{ _id:0, 'periodo': 1}},
-         {$skip: pageNumber == 10 ? 0 : pageNumber - 10},
-        { $limit:10 },
-        {
-          $group: {
-            _id: '$_id',
-            periodo: { $push: '$periodo' },
-          },
-        },
-      ])
-      res.send(defaultResponse(response));
-    } catch (error) {
-      console.log(error)
-      res.send(errorResponse(error));
-    }
-  }
+  //     // })
+  //     const response = await Horarios.aggregate([
+  //       { $match: {sala: toObjectId(sala) }},
+  //        { $unwind: '$periodo' }, 
+  //        { $match: { 'periodo.ativo': true }},
+  //        {$project:{ _id:0, 'periodo': 1}},
+  //        {$skip: pageNumber == 10 ? 0 : pageNumber - 10},
+  //       { $limit:10 },
+  //       {
+  //         $group: {
+  //           _id: '$_id',
+  //           periodo: { $push: '$periodo' },
+  //         },
+  //       },
+  //     ])
+  //     res.send(defaultResponse(response));
+  //   } catch (error) {
+  //     console.log(error)
+  //     res.send(errorResponse(error));
+  //   }
+  // }
   async desativarHorario(req, res) {
     const { id } = req.params;
     try {
@@ -223,7 +223,7 @@ class HorariosController {
   }
   async getHorarios(req,res){
     const { sala } = req.params;
- 
+  const today = subHours(new Date(), 3);
     try {
       const response = await Horarios.aggregate([
             { $match: {sala: toObjectId(sala) }},
@@ -244,7 +244,7 @@ class HorariosController {
             'periodo.ocupado': false,
             'periodo.ativo': true,
             data: {
-              $gte: new Date(),
+              $gte: today,
             },
           },},
                  {
