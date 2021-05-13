@@ -241,17 +241,18 @@ module.exports = {
         const totalAgendamento = await TotalexamesAgendado();
         let horarioSetor = [];
         totalHorarios.forEach((nome) => {
-          horarioSetor.push([nome._id, nome.count, 0]);
+          
           totalAgendamento.forEach((horario) => {
             if (horario._id === nome._id) {
-              horarioSetor = []
-              horarioSetor.push([horario._id, nome.count, horario.count]);
+              horarioSetor.push([horario._id, nome.count, horario.count]);      
             } 
           });
         });
-        return horarioSetor;
+        return horarioSetor
       };
 
+  
+   
       const totalAgendadosMesFuncionario = () => {
         const fimMes = endDayMonth(dataAtual);
         const response = DadosAgendamento.aggregate([
@@ -395,11 +396,13 @@ module.exports = {
       const horarioVsAgendaPeriodo = async () => {
         let total = [];
         const tHorario = await horariosPeriodo();
+       
         const tAgendamento = await agendamentoPeriodo();
+    
         if (tHorario.length > 0) {
           tHorario.forEach((horario) => {
-           
             tAgendamento.forEach((agendamento) => {
+             
               if (horario._id === agendamento._id) {
                 total.push({
                   mes: horario._id,
@@ -407,18 +410,19 @@ module.exports = {
                   agendados: agendamento.totalAgendados,
                 });
               } else {
-                total.push({
-                  mes: horario._id,
-                  horarios: horario.totalHorarios,
-                  agendados: 0,
-                });
+                // total.push({
+                //   mes: horario._id,
+                //   horarios: horario.totalHorarios,
+                //   agendados: 0,
+                // });
               }
             });
           });
         }
-      
-        return total;
+        return  total
       };
+ 
+   
       const taxaOcupacao = async () => {
         let taxaPorSetor = [];
         const totalHorarios = await totalHorarioMes();
